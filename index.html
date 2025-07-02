@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Phone Lookup - Advanced Search</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        :root {
+            --primary: #f1863d;
+            --primary-dark: #d65804;
+            --secondary: #ff6600;
+            --accent: #d40606;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --dark: #2a1c0f;
+            --gray-900: #111827;
+            --gray-800: #1f2937;
+            --gray-700: #374151;
+            --gray-600: #4b5563;
+            --gray-500: #6b7280;
+            --gray-400: #9ca3af;
+            --gray-300: #d1d5db;
+            --gray-200: #e5e7eb;
+            --gray-100: #f3f4f6;
+            --white: #ffffff;
+            --surface: rgba(255, 255, 255, 0.02);
+            --surface-hover: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.16);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+           background: linear-gradient(135deg, #423d35 0%, #eedbc3 50%, #cf4816 100%);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            color: var(--text-primary);
+        }
+
+        /* Animated Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 60%, rgba(6, 182, 212, 0.05) 0%, transparent 50%);
+            animation: backgroundMove 15s ease-in-out infinite;
+        }
+
+        @keyframes backgroundMove {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(1deg); }
+        }
+
+        /* Grid Pattern Overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        .container-fluid {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .main-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(32px);
+            border: 1px solid var(--border);
+            border-radius: 2rem;
+            box-shadow: var(--shadow-2xl);
+            width: 100%;
+            max-width: 480px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .main-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .card-header {
+            padding: 2.5rem 2rem 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            position: relative;
+        }
+
+        .header-icon {
+            width: 4rem;
+            height: 4rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 1.75rem;
+            color: white;
+            animation: iconPulse 2s ease-in-out infinite;
+            box-shadow: 0 8px 32px rgba(99, 102, 241, 0.3);
+        }
+
+        @keyframes iconPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 8px 32px rgba(99, 102, 241, 0.3); }
+            50% { transform: scale(1.05); box-shadow: 0 12px 40px rgba(99, 102, 241, 0.4); }
+        }
+
+        .main-title {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.025em;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            font-size: 0.875rem;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .form-control {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 1rem 1.25rem;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(16px);
+        }
+
+        .form-control:focus {
+            background: var(--surface-hover);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            outline: none;
+            transform: translateY(-1px);
+        }
+
+        .form-control::placeholder {
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .btn-search {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border: none;
+            border-radius: 1rem;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: white;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-search::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s;
+        }
+
+        .btn-search:hover::before {
+            left: 100%;
+        }
+
+        .btn-search:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+           
+        }
+
+        .btn-search:active {
+            transform: translateY(0);
+        }
+
+        .btn-search:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .spinner {
+            width: 1.25rem;
+            height: 1.25rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .result-card {
+            margin-top: 1.5rem;
+            border-radius: 1.25rem;
+            border: none;
+            overflow: hidden;
+            display: none;
+            animation: slideIn 0.4s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .result-error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .result-header {
+            padding: 1.25rem 1.5rem 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .result-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .result-body {
+            padding: 1.5rem;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            gap: 1rem;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            font-size: 0.875rem;
+        }
+
+        .info-value {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 0.5rem 0.75rem;
+            font-weight: 500;
+            text-align: right;
+            word-break: break-all;
+            flex: 1;
+            min-width: 0;
+            font-size: 0.875rem;
+        }
+
+        .error-content {
+            text-align: center;
+            padding: 1rem 0;
+        }
+
+        .error-icon {
+            font-size: 3rem;
+            opacity: 0.7;
+            margin-bottom: 1rem;
+        }
+
+        .footer {
+            padding: 1.5rem 2rem 2rem;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .footer a:hover {
+            color: var(--secondary);
+        }
+
+        .developer-info {
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        /* Floating Elements */
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .floating-element {
+            position: absolute;
+            /* Change from blue to orange */
+            background: rgba(241, 134, 61, 0.15); /* orange, matches --primary */
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 576px) {
+            .container-fluid {
+                padding: 0.75rem;
+            }
+
+            .main-card {
+                max-width: 100%;
+                border-radius: 1.5rem;
+            }
+
+            .card-header {
+                padding: 2rem 1.5rem 1.25rem;
+            }
+
+            .card-body {
+                padding: 1.5rem;
+            }
+
+            .footer {
+                padding: 1.25rem 1.5rem 1.75rem;
+            }
+
+            .main-title {
+                font-size: 1.75rem;
+            }
+
+            .header-icon {
+                width: 3.5rem;
+                height: 3.5rem;
+                font-size: 1.5rem;
+            }
+
+            .info-item {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.5rem;
+            }
+
+            .info-value {
+                text-align: left;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .main-title {
+                font-size: 1.5rem;
+            }
+
+            .header-icon {
+                width: 3rem;
+                height: 3rem;
+                font-size: 1.25rem;
+                margin-bottom: 1rem;
+            }
+
+            .card-header {
+                padding: 1.5rem 1.25rem 1rem;
+            }
+
+            .card-body {
+                padding: 1.25rem;
+            }
+
+            .footer {
+                padding: 1rem 1.25rem 1.5rem;
+                font-size: 0.75rem;
+            }
+
+            .form-control {
+                padding: 0.875rem 1rem;
+            }
+
+            .btn-search {
+                padding: 0.875rem 1.5rem;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .container-fluid {
+                padding: 0.5rem;
+            }
+
+            .main-card {
+                border-radius: 1.25rem;
+            }
+
+            .main-title {
+                font-size: 1.375rem;
+            }
+
+            .subtitle {
+                font-size: 0.875rem;
+            }
+
+            .card-header {
+                padding: 1.25rem 1rem 0.875rem;
+            }
+
+            .card-body {
+                padding: 1rem;
+            }
+
+            .footer {
+                padding: 0.875rem 1rem 1.25rem;
+            }
+
+            .form-control {
+                padding: 0.75rem 0.875rem;
+                font-size: 0.875rem;
+            }
+
+            .btn-search {
+                padding: 0.75rem 1.25rem;
+                font-size: 0.875rem;
+            }
+
+            .info-value {
+                padding: 0.375rem 0.625rem;
+                font-size: 0.8125rem;
+            }
+
+            .info-label {
+                font-size: 0.8125rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Elements -->
+    <div class="floating-elements" id="floatingElements"></div>
+
+    <div class="container-fluid">
+        <div class="main-card animate__animated animate__fadeInUp">
+            <div class="card-header">
+                <div class="header-icon">
+                    <i class="bi bi-telephone-fill"></i>
+                </div>
+                <h1 class="main-title">Phone Lookup</h1>
+                <p class="subtitle">Advanced phone number investigation</p>
+            </div>
+
+            <div class="card-body">
+                <form id="searchForm">
+                    <div class="form-group">
+                        <label class="form-label" for="phoneNumber">
+                            <i class="bi bi-phone"></i>
+                            Phone Number
+                        </label>
+                        <div class="input-group">
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="phoneNumber" 
+                                placeholder="3XXXXXXXXX (without leading 0)" 
+                                pattern="[0-9]+" 
+                                required
+                            >
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-search" id="searchBtn">
+                        <div class="btn-content">
+                            <div class="spinner" id="spinner"></div>
+                            <i class="bi bi-search" id="searchIcon"></i>
+                            <span id="btnText">Search Number</span>
+                        </div>
+                    </button>
+                </form>
+
+                <div class="card result-card" id="resultCard">
+                    <div class="result-header">
+                        <h5 class="result-title" id="resultTitle">
+                            <i class="bi bi-check-circle-fill" id="resultIcon"></i>
+                            <span id="resultTitleText"></span>
+                        </h5>
+                    </div>
+                    <div class="result-body" id="resultBody">
+                        <!-- Results will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <div>
+                    <i class="bi bi-lightning-charge me-1"></i>
+                    Powered by <a href="https://metabizsolution.com/" target="_blank">MetaBiz Solution</a>
+                </div>
+                <div class="developer-info">
+                    <i class="bi bi-code-slash me-1"></i>
+                    Developed by <a href="https://metabizsolutions.github.io/asadirfan/" target="_blank">Asad Irfan</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Create floating elements
+        function createFloatingElements() {
+            const container = document.getElementById('floatingElements');
+            const elementCount = 8;
+
+            for (let i = 0; i < elementCount; i++) {
+                const element = document.createElement('div');
+                element.className = 'floating-element';
+                element.style.left = Math.random() * 100 + '%';
+                element.style.width = Math.random() * 20 + 10 + 'px';
+                element.style.height = element.style.width;
+                element.style.animationDelay = Math.random() * 20 + 's';
+                element.style.animationDuration = (Math.random() * 10 + 15) + 's';
+                container.appendChild(element);
+            }
+        }
+
+        // DOM Elements
+        const searchForm = document.getElementById('searchForm');
+        const phoneInput = document.getElementById('phoneNumber');
+        const searchBtn = document.getElementById('searchBtn');
+        const spinner = document.getElementById('spinner');
+        const searchIcon = document.getElementById('searchIcon');
+        const btnText = document.getElementById('btnText');
+        const resultCard = document.getElementById('resultCard');
+        const resultTitle = document.getElementById('resultTitle');
+        const resultTitleText = document.getElementById('resultTitleText');
+        const resultIcon = document.getElementById('resultIcon');
+        const resultBody = document.getElementById('resultBody');
+
+        // Initialize
+        createFloatingElements();
+
+        // Format phone number input (numbers only)
+        phoneInput.addEventListener('input', function(e) {
+            this.value = this.value.replace(/\D/g, '');
+        });
+
+        // Handle form submission
+        searchForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const phoneNumber = phoneInput.value.trim();
+            
+            if (!phoneNumber) {
+                showError('Please enter a phone number');
+                return;
+            }
+
+            if (phoneNumber.length < 10) {
+                showError('Please enter a valid phone number (at least 10 digits)');
+                return;
+            }
+
+            await searchPhoneNumber(phoneNumber);
+        });
+
+        async function searchPhoneNumber(number) {
+            setLoadingState(true);
+            hideResult();
+
+            try {
+                const apiUrl = `https://anoncyberwarrior.com/acwtools.php?num=${number}`;
+                
+                const response = await fetch(apiUrl);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.message && data.message.includes('No data found')) {
+                    showError(data.message);
+                } else if (data.Name) {
+                    showSuccess(data);
+                } else {
+                    showError('Unexpected response format');
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showError('Failed to fetch data. Please check your connection and try again.');
+            } finally {
+                setLoadingState(false);
+            }
+        }
+
+        function setLoadingState(loading) {
+            if (loading) {
+                searchBtn.disabled = true;
+                spinner.style.display = 'block';
+                searchIcon.style.display = 'none';
+                btnText.textContent = 'Searching...';
+            } else {
+                searchBtn.disabled = false;
+                spinner.style.display = 'none';
+                searchIcon.style.display = 'block';
+                btnText.textContent = 'Search Number';
+            }
+        }
+
+        function showSuccess(data) {
+            resultCard.className = 'card result-card result-success';
+            resultIcon.className = 'bi bi-check-circle-fill text-success';
+            resultTitleText.textContent = 'Information Found';
+            
+            let bodyHTML = '';
+            
+            if (data.Name) {
+                bodyHTML += createInfoItem('bi-person-fill', 'Name', data.Name);
+            }
+            
+            if (data.CNIC) {
+                bodyHTML += createInfoItem('bi-card-text', 'CNIC', data.CNIC);
+            }
+            
+            if (data.Numbers) {
+                bodyHTML += createInfoItem('bi-telephone-fill', 'Number', data.Numbers);
+            }
+            
+            if (data.Address) {
+                bodyHTML += createInfoItem('bi-geo-alt-fill', 'Address', data.Address);
+            }
+            
+            resultBody.innerHTML = bodyHTML;
+            resultCard.style.display = 'block';
+        }
+
+        function showError(message) {
+            resultCard.className = 'card result-card result-error';
+            resultIcon.className = 'bi bi-x-circle-fill text-danger';
+            resultTitleText.textContent = 'No Results Found';
+            
+            resultBody.innerHTML = `
+                <div class="error-content">
+                    <i class="bi bi-search error-icon"></i>
+                    <p class="mb-0">${message}</p>
+                </div>
+            `;
+            
+            resultCard.style.display = 'block';
+        }
+
+        function createInfoItem(icon, label, value) {
+            return `
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="bi ${icon}"></i>
+                        ${label}
+                    </div>
+                    <div class="info-value">${value}</div>
+                </div>
+            `;
+        }
+
+        function hideResult() {
+            resultCard.style.display = 'none';
+        }
+
+        // Focus on input when page loads
+        window.addEventListener('load', function() {
+            phoneInput.focus();
+        });
+
+        // Enter key support
+        phoneInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchForm.dispatchEvent(new Event('submit'));
+            }
+        });
+    </script>
+</body>
+</html>
